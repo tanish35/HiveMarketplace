@@ -1,0 +1,44 @@
+const { Hive } = require("@splinterlands/hive-interface");
+const dotenv = require("dotenv");
+dotenv.config({ path: "../.env" });
+
+const hive = new Hive();
+
+async function deploySmartContract() {
+  const privateKey = process.env.PRIVATE_KEY;
+  const account = "tanish34";
+
+  const base64EncodedCode =
+    "YWN0aW9ucy5jcmVhdGVTU0MgPSBhc3luYyAocGF5bG9hZCkgPT4gewogIGNvbnN0IHsgY2FyYm9uQ3JlZGl0TkZUIH0gPSBwYXlsb2FkOwoKICBpZiAoIWNhcmJvbkNyZWRpdE5GVCkgcmV0dXJuOwoKICBhd2FpdCBhcGkuZGIuY3JlYXRlVGFibGUoJ3NldHRpbmdzJyk7CiAgYXdhaXQgYXBpLmRiLmNyZWF0ZVRhYmxlKCdwdXJjaGFzZXMnKTsKCiAgbGV0IHNldHRpbmdzID0gewogICAgY2FyYm9uQ3JlZGl0TkZULAogICAgb3duZXI6IGFwaS5zZW5kZXIKICB9OwoKICBhd2FpdCBhcGkuZGIuaW5zZXJ0KCdzZXR0aW5ncycsIHNldHRpbmdzKTsKfTsKCmFjdGlvbnMucHVyY2hhc2VUb2tlbiA9IGFzeW5jIChwYXlsb2FkKSA9PiB7CiAgY29uc3QgeyB0b2tlbklkLCBwcmljZSB9ID0gcGF5bG9hZDsKICBjb25zdCBzZXR0aW5ncyA9IGF3YWl0IGFwaS5kYi5maW5kT25lKCdzZXR0aW5ncycsIHt9KTsKICBjb25zdCBuZnRDb250cmFjdCA9IHNldHRpbmdzLmNhcmJvbkNyZWRpdE5GVDsKCiAgCiAgY29uc3QgYW1vdW50ID0gYXBpLkJpZ051bWJlcihhcGkuc2VuZGVyLmJhbGFuY2UpLm1pbnVzKGFwaS5CaWdOdW1iZXIoYXBpLnNlbmRlci5zdGFrZSkpLm1pbnVzKGFwaS5CaWdOdW1iZXIoYXBpLnNlbmRlci5wZW5kaW5nVW5zdGFrZSkpOwogIGlmIChhbW91bnQubHQoYXBpLkJpZ051bWJlcihwcmljZSkpKSB7CiAgICBhcGkuYXNzZXJ0KGZhbHNlLCAnSW5zdWZmaWNpZW50IHBheW1lbnQnKTsKICB9CgogIGNvbnN0IGNyZWRpdCA9IGF3YWl0IGFwaS5leGVjdXRlU21hcnRDb250cmFjdChuZnRDb250cmFjdCwgJ2dldENyZWRpdCcsIHsgdG9rZW5JZCB9KTsKICBpZiAoYXBpLkJpZ051bWJlcihjcmVkaXQuZXhwaXJ5RGF0ZSkubHQoYXBpLkJpZ051bWJlcihhcGkudGltZXN0YW1wKSkpIHsKICAgIGFwaS5hc3NlcnQoZmFsc2UsICdUb2tlbiBleHBpcmVkJyk7CiAgfQoKICBjb25zdCBzZWxsZXIgPSBhd2FpdCBhcGkuZXhlY3V0ZVNtYXJ0Q29udHJhY3QobmZ0Q29udHJhY3QsICdvd25lck9mJywgeyB0b2tlbklkIH0pOwogIGlmICghc2VsbGVyKSB7CiAgICBhcGkuYXNzZXJ0KGZhbHNlLCAnSW52YWxpZCBzZWxsZXInKTsKICB9CgogIGF3YWl0IGFwaS50cmFuc2ZlclRva2VucyhzZWxsZXIsICdTV0FQLkhJVkUnLCBwcmljZSk7CgogIGF3YWl0IGFwaS5leGVjdXRlU21hcnRDb250cmFjdChuZnRDb250cmFjdCwgJ3RyYW5zZmVyJywgeyB0bzogYXBpLnNlbmRlciwgdG9rZW5JZCB9KTsKCiAgYXdhaXQgYXBpLmRiLmluc2VydCgncHVyY2hhc2VzJywgeyB0b2tlbklkLCBidXllcjogYXBpLnNlbmRlciwgc2VsbGVyLCBwcmljZSwgdGltZXN0YW1wOiBhcGkudGltZXN0YW1wIH0pOwoKICBhcGkuZW1pdCgnbmZ0UHVyY2hhc2VkJywgeyB0b2tlbklkLCBidXllcjogYXBpLnNlbmRlciwgc2VsbGVyLCBwcmljZSB9KTsKfTsKCmFjdGlvbnMud2l0aGRyYXcgPSBhc3luYyAocGF5bG9hZCkgPT4gewogIGNvbnN0IHsgYW1vdW50IH0gPSBwYXlsb2FkOwogIGNvbnN0IHNldHRpbmdzID0gYXdhaXQgYXBpLmRiLmZpbmRPbmUoJ3NldHRpbmdzJywge30pOwoKICBpZiAoYXBpLnNlbmRlciAhPT0gc2V0dGluZ3Mub3duZXIpIHsKICAgIGFwaS5hc3NlcnQoZmFsc2UsICdOb3QgdGhlIG93bmVyJyk7CiAgfQoKICBjb25zdCBiYWxhbmNlID0gYXdhaXQgYXBpLmdldEJhbGFuY2UoYXBpLmNvbnRyYWN0TmFtZSwgJ1NXQVAuSElWRScpOwogIGNvbnN0IHdpdGhkcmF3QW1vdW50ID0gYW1vdW50ID8gYXBpLkJpZ051bWJlcihhbW91bnQpLnRvRml4ZWQoOCkgOiBiYWxhbmNlOwoKICBpZiAoYXBpLkJpZ051bWJlcih3aXRoZHJhd0Ftb3VudCkuZ3QoYXBpLkJpZ051bWJlcihiYWxhbmNlKSkpIHsKICAgIGFwaS5hc3NlcnQoZmFsc2UsICdJbnN1ZmZpY2llbnQgYmFsYW5jZScpOwogIH0KCiAgYXdhaXQgYXBpLnRyYW5zZmVyVG9rZW5zKHNldHRpbmdzLm93bmVyLCAnU1dBUC5ISVZFJywgd2l0aGRyYXdBbW91bnQpOwp9Owo=";
+
+  const contractPayload = {
+    contractName: "contract",
+    contractAction: "deploy",
+    contractPayload: {
+      name: "marketplace_contract",
+      code: base64EncodedCode,
+    },
+  };
+  //   console.log(privateKey);
+
+  try {
+    const result = await hive.customJson(
+      "ssc-mainnet-hive",
+      contractPayload,
+      account,
+      privateKey,
+      true,
+      30,
+      3
+    );
+
+    console.log("Contract deployed successfully:", result);
+  } catch (error) {
+    console.error("Error deploying contract:", error);
+  }
+}
+
+deploySmartContract();
+
+//MarketplaceId: 557b58fbe4f7a5af74a8e71be19b043915129bd3
+//Smart Contract: https://hivexplorer.com/tx/557b58fbe4f7a5af74a8e71be19b043915129bd3
